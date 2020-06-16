@@ -1,0 +1,155 @@
+
+\newboolean{setexpansion}
+\setboolean{setexpansion}{false}
+
+\newcommand{\cardtitle}[1]{
+	\ifthenelse{\boolean{setexpansion}}{\expansion}{} 
+	\cardpuretitle{#1}
+}
+
+
+
+%%%   Resources   %%%
+\newcommand{\lumber}{
+	\begin{tikzpicture}
+	\cardresource{img/lumber.png}
+	%        \cardtypeItem
+	\cardtitle{Lumber}
+	%        \cardcontent{Sei mein Feind und es ist das Letzte, was du tust.}{\contentB}
+	%        \cardprice{5}
+	\cardborder
+	%       \carddebug
+	\end{tikzpicture}
+}
+
+\newcommand{\wool}{
+	    \begin{tikzpicture}
+	\cardresource{img/sheep.png}
+	%        \cardtypeItem
+	\cardtitle{Wool}
+	%        \cardcontent{Sei mein Feind und es ist das Letzte, was du tust.}{\contentB}
+	%        \cardprice{5}
+	\cardborder
+	%       \carddebug
+	\end{tikzpicture}
+}
+
+\newcommand{\grain}{
+	\begin{tikzpicture}
+		\cardresource{img/wheat.png}
+		%        \cardtypeItem
+%		\expansion % Has to be before title
+		\cardtitle{Grain}
+		%        \cardcontent{Sei mein Feind und es ist das Letzte, was du tust.}{\contentB}
+%	    \cardprice{5-6}
+		\cardborder
+		%       \carddebug
+	\end{tikzpicture}
+}
+
+\newcommand{\brick}{
+	\begin{tikzpicture}
+	\cardresource{img/bricks.png}
+	%        \cardtypeItem
+	\cardtitle{Brick}
+	%        \cardcontent{Sei mein Feind und es ist das Letzte, was du tust.}{\contentB}
+	%        \cardprice{5}
+	\cardborder
+	%       \carddebug
+	\end{tikzpicture}
+}
+
+\newcommand{\stone}{
+	\begin{tikzpicture}
+	\cardresource{img/rocks.png}
+	%        \cardtypeItem
+	\cardtitle{Ore}
+	%        \cardcontent{Sei mein Feind und es ist das Letzte, was du tust.}{\contentB}
+	%        \cardprice{5}
+	\cardborder
+	%       \carddebug
+	\end{tikzpicture}
+}
+
+%%%   Development cards   %%%
+
+\newcommand{\knight}{
+\begin{tikzpicture}
+\cardresource{img/knight.png}
+%       \carddebug
+%		\cardtypeItem
+%        \cardtypeAbility
+%		\cardtypeTest
+%		\cardtypeCharacter
+\cardtitle{Knight}
+\carddescriptor{Move the robber. \\ \vspace{5mm}Steal \textbf{1} resource from the owner of a settlement or city adjacent to the robber's new hex.}
+%        \cardprice{35}
+\cardborder
+\end{tikzpicture}
+}
+
+\newcommand{\road}{
+	\begin{tikzpicture}
+	\cardresource{img/roads.png}
+	%       \carddebug
+	%		\cardtypeItem
+	%        \cardtypeAbility
+	%		\cardtypeTest
+	%		\cardtypeCharacter
+	\cardtitle{Road Building}
+	\carddescriptor{Place \textbf{2} new roads as if you had just built them.}
+	%        \cardprice{35}
+	\cardborder
+	\end{tikzpicture}
+}
+
+\newcommand{\plenty}{
+	\begin{tikzpicture}
+	\cardresource{img/harvest.png}
+	%       \carddebug
+	%		\cardtypeItem
+	%        \cardtypeAbility
+	%		\cardtypeTest
+	%		\cardtypeCharacter
+	\cardtitle{Year of Plenty}
+	\carddescriptor{Take any \textbf{2} resources from the bank. Add them to your hand.\\ They can be 2 of the same resource or 2 different resources.}
+	%        \cardprice{35}
+	\cardborder
+	\end{tikzpicture}
+}
+
+\newcommand{\monopoly}{
+	\begin{tikzpicture}
+	\cardresource{img/monopoly.png}
+	\cardtitle{Monopoly}
+	\carddescriptor{When you play this card, announce \textbf{1 type} of resource.\\ All other players must give you \textbf{all} of their resources of that type.}
+	\cardborder
+	\end{tikzpicture}
+}
+
+\newcommand{\onevp}[2]{
+	\begin{tikzpicture}
+	\cardresource{#2}
+	\cardtitle{#1}
+	\carddescriptor{\centering\textbf{\Large 1 Victory Point!}\\ \vspace{5mm}Reveal this card on your turn if, with it, you reach the number of points required for victory.}
+	\cardborder
+	\end{tikzpicture}
+}
+
+\newcommand{\chapel}{
+	\onevp{Chapel}{img/chapel.jpg}
+}
+
+\newcommand{\university}{
+	\onevp{University}{img/school.png}
+}
+\newcommand{\ghall}{
+	\onevp{Great Hall}{img/hall.jpg}
+}
+\newcommand{\library}{
+	\onevp{Library}{img/library.png}
+}
+\newcommand{\market}{
+	\onevp{Market}{img/market.jpg}
+}
+

@@ -1,0 +1,85 @@
+\documentclass[a6paper,portrait]{article}
+
+%   Load packages
+\input{include/libs.tex}
+%   Load color definitions
+\input{include/colors.tex}
+%   \card-Commands laden
+\input{include/tikzcards.tex}
+
+\input{include/catancards.tex}
+
+\newboolean{actualgamecontent}
+\setboolean{actualgamecontent}{false}
+
+
+\begin{document}
+\begin{center}
+\pagestyle{empty}
+
+\ifthenelse{\boolean{actualgamecontent}}
+{
+
+\foreach \n in {1,...,19}{\lumber{}}
+\foreach \n in {1,...,19}{\wool{}}
+\foreach \n in {1,...,19}{\grain{}}
+\foreach \n in {1,...,19}{\brick{}}
+\foreach \n in {1,...,19}{\stone{}}
+
+\foreach \n in {1,...,14}{\knight{}}
+\foreach \n in {1,...,2}{\plenty{}}
+\foreach \n in {1,...,2}{\monopoly{}}
+\foreach \n in {1,...,2}{\road{}}
+
+\chapel{}
+\university{}
+\ghall{}
+\library{}
+\market{}
+
+
+%% 5-6 player expansion
+
+\setboolean{setexpansion}{true}
+
+\foreach \n in {1,...,5}{\lumber{}}
+\foreach \n in {1,...,5}{\wool{}}
+\foreach \n in {1,...,5}{\grain{}}
+\foreach \n in {1,...,5}{\brick{}}
+\foreach \n in {1,...,5}{\stone{}}
+
+
+\foreach \n in {1,...,6}{\knight{}}
+\road{}
+\monopoly{}
+\plenty{}
+%% Doesn't seem to be any new victory point cards.
+
+}
+%% Showcase of all cards
+{
+
+
+\lumber{}
+\setboolean{setexpansion}{true}
+\wool{}
+\setboolean{setexpansion}{false}
+\grain{}
+\brick{}
+\stone{}
+
+\knight{}
+\road{}
+\plenty{}
+\monopoly{}
+
+\chapel{}
+\university{}
+\ghall{}
+\library{}
+\market{}
+
+}
+
+\end{center}
+\end{document}
