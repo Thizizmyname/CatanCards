@@ -1,4 +1,4 @@
-\documentclass[a6paper,portrait]{article}
+\documentclass[]{article}
 
 %   Load packages
 \input{include/libs.tex}
@@ -10,76 +10,131 @@
 \input{include/catancards.tex}
 
 \newboolean{actualgamecontent}
-\setboolean{actualgamecontent}{false}
+\setboolean{actualgamecontent}{true}
+
+% Due to the non-existing margin in this document
+% geometry at a6-paper with marging exactly at the card-borders
+% the is no room for blank lines between each card or there will be a blank page to fit the vertical space. This package removes the first page that is introduced due to the constraint.
+% WARNING - make sure the first card is printed, if multiple of the same starts (resources),
+% make sure you get all of them.
+\usepackage{atbegshi}% http://ctan.org/pkg/atbegshi
+\AtBeginDocument{\AtBeginShipoutNext{\AtBeginShipoutDiscard}}
 
 
-\begin{document}
-\begin{center}
-\pagestyle{empty}
-
-\ifthenelse{\boolean{actualgamecontent}}
-{
-
-\foreach \n in {1,...,19}{\lumber{}}
+\begin{document}%
+\begin{center}%
+\pagestyle{empty}%
+%
+%
+% {\begin{tikzpicture}
+% 	\cardtitle{Font Size Demo}
+% 	\fulltikznode{
+% 		\vrule width \textwidth height 2pt \\[2pt]
+% 		{\normalsize Normal size font \\
+% 		Each harbor tile should be placed every other full tile apart. At a tile with two connecting edges the harbors should be placed facing inwards}
+% 		\vrule width \textwidth height 2pt \\[2pt]
+% 		{\footnotesize Footnote size font \\
+% 		Each harbor tile should be placed every other full tile apart. At a tile with two connecting edges the harbors should be placed facing inwards}
+% 		\vrule width \textwidth height 2pt \\[2pt]
+% 		{\scriptsize Scriptsize size font \\
+% 		Each harbor tile should be placed every other full tile apart. At a tile with two connecting edges the harbors should be placed facing inwards}
+% 		\vrule width \textwidth height 2pt \\[2pt]
+% 		{\tiny tiny size font \\
+% 		Each harbor tile should be placed every other full tile apart. At a tile with two connecting edges the harbors should be placed facing inwards}
+% 		\vrule width \textwidth height 2pt %\\[2pt]
+% 	}
+% 	\cardtypeRule{Font Size Demo}
+% 	\cardborder
+% 	\end{tikzpicture}
+% }%
+%
+%% Rules
+\setupGame{}
+\setupNumberT{}
+\harborrule{}
+\setupStart{}
+\setboolean{setexpansion}{true}
+\ruleAddendum{}
+\setboolean{setexpansion}{false}
+%
+%
+\ifthenelse{\boolean{actualgamecontent}}%
+{%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Warning
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\foreach \n in {1,...,19}{\lumber{}}  % 19
 \foreach \n in {1,...,19}{\wool{}}
 \foreach \n in {1,...,19}{\grain{}}
 \foreach \n in {1,...,19}{\brick{}}
 \foreach \n in {1,...,19}{\stone{}}
-
+%
 \foreach \n in {1,...,14}{\knight{}}
 \foreach \n in {1,...,2}{\plenty{}}
 \foreach \n in {1,...,2}{\monopoly{}}
 \foreach \n in {1,...,2}{\road{}}
-
+%
 \chapel{}
 \university{}
 \ghall{}
 \library{}
 \market{}
-
-
+%
+\bonusKnight{}
+\bonusRoad{}
+%
+\foreach \n in {1,...,4}{\buildcost{}}
+%
+%
 %% 5-6 player expansion
-
-\setboolean{setexpansion}{true}
-
+%
+\setboolean{setexpansion}{true}%
+%
 \foreach \n in {1,...,5}{\lumber{}}
 \foreach \n in {1,...,5}{\wool{}}
 \foreach \n in {1,...,5}{\grain{}}
 \foreach \n in {1,...,5}{\brick{}}
 \foreach \n in {1,...,5}{\stone{}}
-
-
+%
+\foreach \n in {1,...,2}{\buildcost{}}
+%
 \foreach \n in {1,...,6}{\knight{}}
 \road{}
 \monopoly{}
 \plenty{}
-%% Doesn't seem to be any new victory point cards.
-
-}
+% Doesn't seem to be any new victory point cards.
+%
+}%
 %% Showcase of all cards
-{
-
-
+{%
+%
+\buildcost{}
+%
 \lumber{}
-\setboolean{setexpansion}{true}
 \wool{}
-\setboolean{setexpansion}{false}
 \grain{}
 \brick{}
+\setboolean{setexpansion}{true}
 \stone{}
-
+%
 \knight{}
+\setboolean{setexpansion}{false}
 \road{}
 \plenty{}
 \monopoly{}
-
+%
 \chapel{}
 \university{}
 \ghall{}
 \library{}
 \market{}
-
-}
-
+%
+\bonusRoad{}
+\bonusKnight{}
+}%
+%
 \end{center}
 \end{document}

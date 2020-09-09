@@ -1,7 +1,18 @@
 \documentclass{article}
 \usepackage[english]{babel}%
-\usepackage[a4paper]{geometry}% http://ctan.org/pkg/geometry
+% \usepackage[a4paper]{geometry}% http://ctan.org/pkg/geometry
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+%  total={105mm,148mm},
+ left=9.5mm,
+ top=2.25mm,
+ bottom=2.25mm
+%  bottom=12.25mm
+ }
+
 \usepackage{pdfpages}% http://ctan.org/pkg/pdfpages
 \begin{document}
-\includepdf[pages=-,nup=2x2,noautoscale]{cards}%
+\includepdf[pages=-,nup=2x2,noautoscale]{CatanCards}%
 \end{document}

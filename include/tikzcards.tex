@@ -14,7 +14,12 @@
 \pgfmathsetmacro{\strippadding}{0.2}
 \pgfmathsetmacro{\textpadding}{0.1}
 \pgfmathsetmacro{\titley}{\cardheight-\strippadding-1.5*\textpadding-0.5*\stripwidth}
+% For Catan
+\pgfmathsetmacro{\titleheight}{2*\stripwidth}
 \pgfmathsetmacro{\resourcewidth}{\cardwidth-2*\stripwidth-2*\strippadding}
+\pgfmathsetmacro{\RuleImgwidth}{\cardwidth-4*\strippadding-2*\stripwidth -2*\strippadding}
+\pgfmathsetmacro{\RuleImgheight}{\cardheight-0.31*\cardheight-2*\stripwidth-2*\strippadding  -2*\strippadding}
+\pgfmathsetmacro{\miniwidth}{\stripwidth-0.1}
 
 
 %   Forms of the individual map elements / components
@@ -26,11 +31,28 @@
 
 \def\shapeRightStripShort{(\cardwidth-\stripwidth-\strippadding,\cardheight-\strippadding-1) rectangle (\cardwidth-\strippadding,\cardheight+0.2)}
 
-\def\shapeTitleArea{(2*\strippadding+\stripwidth,\cardheight-\strippadding) rectangle (\cardwidth-2*\strippadding-\stripwidth,\cardheight-2*\stripwidth)}
+\def\shapeTitleArea{(2*\strippadding+\stripwidth,\cardheight-\strippadding) rectangle (\cardwidth-2*\strippadding-\stripwidth,\cardheight-\titleheight)}
 
 \def\shapeContentArea{(2*\strippadding+\stripwidth,0.5*\cardheight) rectangle (\cardwidth+0.2,-0.2)}
 
-\def\shapeExpansionArea{(\cardwidth-\stripwidth-5*\strippadding,\cardheight-\strippadding) rectangle (\cardwidth-\strippadding,\cardheight-2*\stripwidth)}
+% Custom catan shapes
+
+\def\shapeDescriptorArea{(-0.2,   0.31*\cardheight) rectangle (\cardwidth+0.2,-0.2)}
+
+% Deprecated: moved to another location
+\def\shapeExpansionArea{(\cardwidth-\stripwidth-5*\strippadding,\cardheight-\strippadding) rectangle (\cardwidth-\strippadding,\cardheight-\titleheight)}
+
+\def\shapeLeftStripExtra{(\strippadding,\strippadding) rectangle (\strippadding+\stripwidth,\cardheight-\strippadding)}
+
+\def\shapeRuleImg{(2*\strippadding+\stripwidth,0.31*\cardheight+\strippadding) rectangle (\cardwidth-2*\strippadding-\stripwidth,\cardheight-\titleheight-\strippadding)}
+
+\def\shapeResourceMiniUL{(\strippadding,\cardheight-\titleheight) rectangle (\strippadding+\stripwidth,\cardheight-\strippadding)}
+
+\def\shapeResourceMiniUR{(\cardwidth-\stripwidth-\strippadding,\cardheight-\titleheight) rectangle (\cardwidth-\strippadding,\cardheight-\strippadding)}
+
+\def\shapeResourceMiniBL{(\strippadding,\strippadding) rectangle (\strippadding+\stripwidth,\titleheight)}
+
+\def\shapeResourceMiniBR{(\cardwidth-\stripwidth-\strippadding,\strippadding) rectangle (\cardwidth-\strippadding,\titleheight)}
 
 
 %   Define styles for the elements
@@ -64,13 +86,49 @@
             };
         }
     },
-    newcardimage/.style={
+    %% Catan
+    centerImg/.style={
 		path picture={
 			\node[below=20mm] at (0.5*\cardwidth,\cardheight) {
 				\includegraphics[width=\resourcewidth cm]{#1}
 			};
 		}
 	},
+	ruleImage/.style={
+        path picture={
+            \node at (path picture bounding box.center) {
+                \includegraphics[
+                    height=\RuleImgheight cm,
+                    width=\RuleImgwidth cm,
+                    % height=2 cm,
+                    % width=2 cm,
+                    keepaspectratio]{#1}
+            };
+        }
+    },
+    miniImage/.style={
+        path picture={
+            \node at (path picture bounding box.center) {
+                \includegraphics[
+                % titleheight is not entierly correct, since it does not include strippadding
+                    height=\titleheight cm,
+                    width=\miniwidth cm,
+                    keepaspectratio]{#1}
+            };
+        }
+    },
+    miniFlipImage/.style={
+        path picture={
+            \node at (path picture bounding box.center) {
+                \includegraphics[
+                % titleheight is not entierly correct, since it does not include strippadding
+                    height=\titleheight cm,
+                    width=\miniwidth cm,
+                    keepaspectratio,
+                    angle=180]{#1}
+            };
+        }
+    },
 }
 
 %   TikZ-Raster
@@ -79,7 +137,7 @@
 }
 
 %   Rahmen der Karte
-\newcommand{\cardborder}{
+\newcommand{\purecardborder}{
     \draw[lightgray,thick,cardcorners] \shapeCard;
 }
 
@@ -88,8 +146,39 @@
     \draw[cardcorners, cardimage=#1] \shapeCard;
 }
 
+%% Catan
+\newcommand{\devImg}[1]{
+    \path[centerImg=#1] \shapeCard;
+}
+
 \newcommand{\cardresource}[1]{
-	\draw[cardcorners, newcardimage=#1] \shapeCard;
+	\path[centerImg=#1] \shapeCard;
+	\draw[cardcorners, thick, miniImage=#1] \shapeResourceMiniUL;
+	\draw[cardcorners, thick,miniImage=#1] \shapeResourceMiniUR;
+    \draw[cardcorners, thick, miniFlipImage=#1] \shapeResourceMiniBL;
+    \draw[cardcorners, thick, miniFlipImage=#1] \shapeResourceMiniBR;
+}
+
+\newcommand{\cardRuleImg}[1]{
+    % \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[width=\textwidth]{some_image.jpg}};
+ 	\path[ruleImage=#1] \shapeRuleImg;
+
+}
+
+% Inlined cardRuleImg data to slight raise the height above title strip
+\pgfmathsetmacro{\BonusImgheight}{\cardheight-0.31*\cardheight-\stripwidth-2*\strippadding}
+\newcommand{\cardBonusImg}[1]{
+ 	\path[
+ 	    path picture={
+            \node at (path picture bounding box.center) {
+                \includegraphics[
+                    height=\BonusImgheight cm,
+                    width=\RuleImgwidth cm,
+                    keepaspectratio]{#1}
+            };
+        }
+ 	] (2*\strippadding+\stripwidth,0.31*\cardheight+\strippadding) rectangle (\cardwidth-2*\strippadding-\stripwidth,\cardheight-\stripwidth-\strippadding);
+
 }
 
 %   Kategorie der Karte
@@ -123,6 +212,33 @@
 \newcommand{\cardtypeTest}{\cardtype{testbg}{Testkarte}
 	{\hspace{-1.4mm}\huge\ding{78}}}
 
+
+%   Card Categories
+\newcommand{\catancardtype}[2]{
+    %   First we fill the intersecting area
+    %   The \clip command does not allow options, therefore 
+    %   we have to use a scope to set the even odd rule.
+    \begin{scope}[even odd rule]
+        %   Define a clipping path. All paths outside shapeCard will
+        %   be cut because the even odd rule is set.
+        \clip[cardcorners] \shapeCard;
+        % Fill shapeLeftStripLong and shapeLeftStripShort.
+        %   Since the even odd rule is set, only the card will be filled.
+        % \fill[strip,#1] \shapeLeftStripLong node[rotate=90,above left=0.9mm,font=\normalsize] {
+        %     \color{black}\uppercase{#2}
+        % };
+        \draw[strip,titlebg, thick, fill=#1] \shapeLeftStripExtra node[rotate=90,above left=0.9mm,font=\normalsize] {
+            \color{black}\uppercase{#2}
+        };
+        % \draw[strip,titlebg, thick, fill=#1] \shapeLeftStripShort;
+        % \draw[strip,titlebg, thick] \shapeRuleImg;
+    \end{scope}
+
+    % \node at (\strippadding+\stripwidth-0.28,\cardheight-\strippadding-\strippadding-0.37) {\color{black}#3};
+}
+\newcommand{\cardtypeRule}[1]{\catancardtype{rulebg}{Rules\quad ---\quad #1}}
+\newcommand{\cardtypeBonus}[1]{\catancardtype{rulebg}{Bonus card\quad ---\quad #1}}
+
 %   Titel der Karte
 %\newcommand{\cardtitle}[1]{
 %%    \draw[pattern=soft crosshatch,rounded corners=0.1cm] \shapeTitleArea;
@@ -134,7 +250,7 @@
 %    };
 %}
 
-\newcommand{\cardpuretitle}[1]{
+\newcommand{\cardtitle}[1]{
 	%    \draw[pattern=soft crosshatch,rounded corners=0.1cm] \shapeTitleArea;
 	\draw[elementcorners,titlebg, ultra thick, fill=white] \shapeTitleArea;
 	\node[text width=3.75cm] at (0.5*\cardwidth,\titley) {
@@ -145,30 +261,30 @@
 }
 
 %   Inhalt der Karte
-\newcommand{\cardcontent}[2]{
-    \begin{scope}[even odd rule]
-        \clip[cardcorners] \shapeCard;
-        \fill[elementcorners,contentbg] \shapeContentArea;
-    \end{scope}
-    \node[below right, text width=(\cardwidth-2*\strippadding-\stripwidth-2*\textpadding-0.3)*1cm] at (2*\strippadding+\stripwidth+\textpadding,0.5*\cardheight-\textpadding) {
-        \textit{\glqq\normalsize #1\grqq}
-    };
-    \node[below right, text width=(\cardwidth-2*\strippadding-\stripwidth-2*\textpadding-0.3)*1cm] at (2*\strippadding+\stripwidth+\textpadding,3) {
-        \vrule width \textwidth height 2pt \\[-2pt]
-        \vspace{0.2cm}
-        {\scriptsize #2}
-    };
-}
+% Allows a divided section for game-text and lore-text
+% Commented out since my cards use carddescriptor
+% \newcommand{\cardcontent}[2]{
+%     \begin{scope}[even odd rule]
+%         \clip[cardcorners] \shapeCard;
+%         \fill[elementcorners,contentbg] \shapeContentArea;
+%     \end{scope}
+%     \node[below right, text width=(\cardwidth-2*\strippadding-\stripwidth-2*\textpadding-0.3)*1cm] at (2*\strippadding+\stripwidth+\textpadding,0.5*\cardheight-\textpadding) {
+%         \textit{\glqq\normalsize #1\grqq}
+%     };
+%     \node[below right, text width=(\cardwidth-2*\strippadding-\stripwidth-2*\textpadding-0.3)*1cm] at (2*\strippadding+\stripwidth+\textpadding,3) {
+%         \vrule width \textwidth height 2pt \\[-2pt]
+%         \vspace{0.2cm}
+%         {\scriptsize #2}
+%     };
+% }
 
-%\def\shapeDescriptorArea{(2*\strippadding+\stripwidth,   0.31*\cardheight) rectangle (\cardwidth-2*\strippadding-\stripwidth,-0.2)}
 
-\def\shapeDescriptorArea{(-0.2,   0.31*\cardheight) rectangle (\cardwidth+0.2,-0.2)}
 
 
 \newcommand{\carddescriptor}[1]{
 	\begin{scope}[even odd rule]
 		\clip[cardcorners] \shapeCard;
-		\fill[elementcorners,contentbg] \shapeDescriptorArea;
+		\fill[elementcorners,textbg] \shapeDescriptorArea;
 	\end{scope}
 %	\node[below right, text width=(\cardwidth-2*\strippadding-\stripwidth-2*\textpadding-0.3)*1cm] at (2*\strippadding+\stripwidth+\textpadding,0.5*\cardheight-\textpadding) {
 %		\textit{\glqq\normalsize #1\grqq}
@@ -180,7 +296,15 @@
 	};
 }
 
-\newcommand{\expansion}{
+\newcommand{\fulltikznode}[1]{
+	\node
+	[below right, text width=(\cardwidth-2*\strippadding-2*\stripwidth-2*\textpadding-2*0.3)*1cm] 
+	at (2*\strippadding+\stripwidth+\textpadding,11) 
+	{#1};
+}
+
+%% Deprecated
+\newcommand{\depexpansion}{
 %	\begin{scope}[even odd rule]
 %		\clip[cardcorners] \shapeCard;
 %		\clip[cardcorners] \shapeExpansionArea;
@@ -191,6 +315,13 @@
 	\draw[elementcorners,titlebg, ultra thick,opacity=.85] \shapeExpansionArea;
 	\node at (\cardwidth-0.5*\stripwidth-\strippadding-0.1,\titley-0.1) {\color{black}5-6};
 }
+
+\newcommand{\expansion}{
+	\draw[cardcorners, titlebg, thick,opacity=.85]
+	    (0.5*\cardwidth-0.75*\stripwidth,\strippadding) rectangle (0.5*\cardwidth+0.75*\stripwidth,\strippadding+\stripwidth);
+\node at (0.5*\cardwidth,\strippadding+0.5*\stripwidth) {\scriptsize\color{black}5-6};
+}
+
 
 %   Preis der Karte
 \newcommand{\cardprice}[1]{
